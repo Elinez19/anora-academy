@@ -3,24 +3,23 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, Sun, Moon, Menu, X } from 'lucide-react';
+import { ChevronDown, Menu, X } from 'lucide-react';
 import { HeaderProps } from '@/interfaces/header';
 import { HEADER_DEFAULTS, HEADER_NAVIGATION, MEGA_MENUS } from '@/constants/header';
+import { useRouter } from 'next/navigation';
 
 export const Header: React.FC<HeaderProps> = ({
   companyName = HEADER_DEFAULTS.companyName,
   navigation = HEADER_NAVIGATION,
   megaMenus = MEGA_MENUS,
-  showThemeToggle = true,
   showGetStartedButton = true,
   getStartedButtonText = HEADER_DEFAULTS.getStartedButtonText,
-  onGetStartedClick,
-  onThemeToggle
+  onGetStartedClick
 }) => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeMegaMenu, setActiveMegaMenu] = useState<string | null>(null);
   const megaMenuRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   // Close mega menu when clicking outside
   useEffect(() => {
@@ -33,11 +32,6 @@ export const Header: React.FC<HeaderProps> = ({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
-  const handleThemeToggle = () => {
-    setIsDarkMode(!isDarkMode);
-    onThemeToggle?.();
-  };
 
   const toggleMegaMenu = (menuName: string) => {
     setActiveMegaMenu(activeMegaMenu === menuName ? null : menuName);
@@ -100,20 +94,10 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-4">
-            {/* Theme Toggle */}
-            {showThemeToggle && (
-              <button
-                onClick={handleThemeToggle}
-                className="p-2 text-gray-600 hover:text-primary hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-              </button>
-            )}
-
             {/* Get Started Button */}
             {showGetStartedButton && (
               <Button
-                onClick={onGetStartedClick}
+                onClick={() => router.push('/auth')}
                 className="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-lg font-medium transition-colors"
               >
                 {getStartedButtonText}
