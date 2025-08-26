@@ -30,8 +30,8 @@ export const CTABanner: React.FC<CTABannerProps> = ({
       )}
       
       {/* Content */}
-      <div className="container mx-auto px-8 lg:px-16 relative z-10">
-        <div className="text-center max-w-4xl mx-auto">
+      <div className="container mx-auto px-8 lg:px-16 relative z-10 overflow-hidden">
+        <div className="text-center max-w-4xl mx-auto overflow-hidden">
           {/* Main Heading */}
           <h2 className="text-4xl lg:text-6xl font-bold text-white mb-6 leading-tight">
             {title}
