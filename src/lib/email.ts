@@ -1,4 +1,4 @@
-import { env } from "./env";
+
 import resend from "./resend";
 
 interface EmailOptions {
@@ -11,7 +11,7 @@ interface EmailOptions {
 export async function sendEmail(options: EmailOptions) {
   try {
     const { data, error } = await resend.emails.send({
-      from: 'TechAcademy <onboarding@resend.dev>', // Update this with your verified domain
+      from: 'AnoraTech Academy <onboarding@resend.dev>', // Update this with your verified domain
       to: [options.to],
       subject: options.subject,
       html: options.html,
@@ -109,6 +109,7 @@ Your verification code is: ${otp}
 This code will expire in 5 minutes for security reasons.
 
 If you didn't request this code, please ignore this email.
+  AnoraTech Academy. Copyright ${new Date().getFullYear()}
   `.trim();
 }
 

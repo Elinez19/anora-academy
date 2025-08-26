@@ -8,7 +8,7 @@ import { authClient } from '@/lib/auth-client';
 import { toast } from 'sonner';
 import { FcGoogle } from "react-icons/fc";
 
-import { Github, Mail, ArrowLeft,  } from 'lucide-react';
+import { Github, Mail, ArrowLeft, Loader2,  } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 
 export default function SignInForm() {
@@ -120,7 +120,6 @@ export default function SignInForm() {
         fetchOptions: {
           onSuccess: () => {
             toast.success('Signed in successfully!');
-            // Redirect to dashboard after successful sign-in
             window.location.href = '/dashboard';
           },
           onError: (error: unknown) => {
@@ -225,7 +224,7 @@ export default function SignInForm() {
       >
         {isGithubPending ? (
           <div className="flex items-center justify-center">
-            <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2"></div>
+            <Loader2 className="size-4 animate-spin" />
             Connecting to GitHub...
           </div>
         ) : (
@@ -244,7 +243,7 @@ export default function SignInForm() {
       >
         {isGooglePending ? (
           <div className="flex items-center justify-center">
-            <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2"></div>
+            <Loader2 className="size-4 animate-spin" />
             Connecting to Google...
           </div>
         ) : (
@@ -286,7 +285,7 @@ export default function SignInForm() {
         >
           {isLoading ? (
             <div className="flex items-center">
-              <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2"></div>
+              <Loader2 className="size-4 animate-spin" />
               Sending email...
             </div>
           ) : (

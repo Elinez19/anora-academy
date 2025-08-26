@@ -17,7 +17,7 @@ export const CTABanner: React.FC<CTABannerProps> = ({
   showBackgroundImage = true
 }) => {
   return (
-    <section className="py-20 bg-background relative overflow-hidden">
+    <section className="py-20 bg-gray-800 relative overflow-hidden">
       {/* Background Image with Overlay */}
       {showBackgroundImage && (
         <div className="absolute inset-0 z-0">
@@ -25,7 +25,7 @@ export const CTABanner: React.FC<CTABannerProps> = ({
             className="w-full h-full bg-cover bg-center bg-no-repeat"
             style={{ backgroundImage: `url(${backgroundImage})` }}
           />
-          <div className="absolute inset-0 bg-primary/90 mix-blend-multiply" />
+          <div className="absolute inset-0 bg-gray-800/90 mix-blend-multiply" />
         </div>
       )}
       
@@ -46,7 +46,7 @@ export const CTABanner: React.FC<CTABannerProps> = ({
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button
               onClick={onPrimaryClick}
-              className="bg-white text-primary hover:bg-gray-100 px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl group"
+              className="bg-primary text-white hover:bg-primary/80 hover:text-white px-4 py-6 text-lg font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl group"
             >
               {primaryButtonText}
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -55,7 +55,7 @@ export const CTABanner: React.FC<CTABannerProps> = ({
             <Button
               onClick={onSecondaryClick}
               variant="outline"
-              className="border-2 border-white/30 text-white hover:bg-white hover:text-primary px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 backdrop-blur-sm"
+                className="border-2 border-white/30 text-primary hover:bg-primary hover:text-white px-4 py-6 text-lg font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 backdrop-blur-sm"
             >
               <Play className="mr-2 w-5 h-5" />
               {secondaryButtonText}
