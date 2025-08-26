@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { authClient } from '@/lib/auth-client';
-import { User as UserIcon, LogOut } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { User as UserIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
@@ -21,7 +21,7 @@ export function User() {
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
-          router.push("/signin"); 
+          router.push("/"); 
         },
       },
     });
@@ -87,17 +87,7 @@ export function User() {
           variant="outline" 
           className="w-full"
         >
-          <LogOut className="w-4 h-4 mr-2" />
           Sign Out
-        </Button>
-        
-        <Button 
-          onClick={() => refetch()} 
-          variant="ghost" 
-          size="sm" 
-          className="w-full"
-        >
-          Refresh Session
         </Button>
       </div>
     </div>

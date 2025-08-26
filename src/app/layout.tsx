@@ -5,6 +5,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import EmailOptInWrapper from "@/components/EmailOptInWrapper";
+import { Toaster } from "sonner";
 
 
 const gantari = Gantari({
@@ -39,6 +40,10 @@ export default function RootLayout({
         </main>
         <Footer />
         <EmailOptInWrapper />
+        <Toaster 
+          position="bottom-right"
+          duration={4000}
+        />
       </body>
     </html>
   );

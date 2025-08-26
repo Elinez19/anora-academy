@@ -5,7 +5,7 @@ export default function AuthPage() {
   return (
     <div className="bg-white rounded-2xl shadow-xl p-8 border border-midnight-100 text-center">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-midnight-900 mb-2">Welcome to TechAcademy</h1>
+        <h1 className="text-3xl font-bold text-midnight-900 mb-2">Welcome to AnoraTech Academy</h1>
         <p className="text-midnight-600">Choose an option to continue</p>
       </div>
       

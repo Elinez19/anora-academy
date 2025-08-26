@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { User, LogOut, Settings, ChevronDown } from 'lucide-react';
+import { User, Settings, ChevronDown, LogOut } from 'lucide-react';
 import LogoutButton from './LogoutButton';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -205,8 +205,7 @@ export default function UserMenu() {
               size="sm"
               className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
             >
-              <LogOut className="w-4 h-4 mr-2" />
-              Sign out
+              Logout
             </LogoutButton>
           </div>
         </div>

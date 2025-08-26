@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { authClient } from '@/lib/auth-client';
 import { toast } from 'sonner';
 import { LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -32,11 +31,9 @@ export default function LogoutButton({
       
       if (response.ok) {
         toast.success('Signed out successfully');
-        // Trigger a custom event to notify UserMenu to refresh
         window.dispatchEvent(new CustomEvent('auth:logout'));
-        // Small delay to ensure the event is processed
         setTimeout(() => {
-          router.push('/signin'); // redirect to signin page
+          router.push('/signin');
           router.refresh();
         }, 100);
       } else {

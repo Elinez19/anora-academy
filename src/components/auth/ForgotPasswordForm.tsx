@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
@@ -42,10 +42,10 @@ export default function ForgotPasswordForm() {
         </div>
         <h3 className="text-xl font-semibold text-midnight-900">Check your email</h3>
         <p className="text-midnight-600">
-          We've sent password reset instructions to <strong>{email}</strong>
+          We&apos;ve sent password reset instructions to <strong>{email}</strong>
         </p>
         <p className="text-sm text-midnight-500">
-          Didn't receive the email? Check your spam folder or{' '}
+          Didn&apos;t receive the email? Check your spam folder or{' '}
           <button
             onClick={() => setIsSubmitted(false)}
             className="text-mint-600 hover:text-mint-700 font-medium"
