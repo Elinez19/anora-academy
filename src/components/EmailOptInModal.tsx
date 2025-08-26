@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { X, Mail, CheckCircle, ArrowRight } from 'lucide-react';
+import { X, Mail, CheckCircle, ArrowRight, Check, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
@@ -126,7 +126,7 @@ export default function EmailOptInModal({ onClose, isVisible }: EmailOptInModalP
           className="absolute top-2 right-2 sm:top-4 sm:right-4 p-2 hover:bg-gray-100 rounded-full transition-colors z-10"
           type="button"
         >
-          <X className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
+          <X className="size-6 text-white" />
         </button>
 
         {/* Responsive Layout */}
@@ -151,15 +151,15 @@ export default function EmailOptInModal({ onClose, isVisible }: EmailOptInModalP
                 {/* Benefits */}
                 <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
                   <div className="flex items-center gap-2 sm:gap-3">
-                    <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-green-500 flex-shrink-0" />
+                    <Check className="w-5 h-5 sm:w-6 sm:h-6 text-primary flex-shrink-0" />
                     <span className="text-sm sm:text-base text-gray-700">Access to exclusive course content</span>
                   </div>
                   <div className="flex items-center gap-2 sm:gap-3">
-                    <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-green-500 flex-shrink-0" />
+                    <Check className="w-5 h-5 sm:w-6 sm:h-6 text-primary flex-shrink-0" />
                     <span className="text-sm sm:text-base text-gray-700">Weekly learning tips and tricks</span>
                   </div>
                   <div className="flex items-center gap-2 sm:gap-3">
-                    <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-green-500 flex-shrink-0" />
+                    <Check className="w-5 h-5 sm:w-6 sm:h-6 text-primary flex-shrink-0" />
                     <span className="text-sm sm:text-base text-gray-700">Early access to new courses</span>
                   </div>
                 </div>
@@ -183,7 +183,7 @@ export default function EmailOptInModal({ onClose, isVisible }: EmailOptInModalP
                   >
                     {isSubmitting ? (
                       <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <Loader2 className="size-4 animate-spin" />
                         Subscribing...
                       </div>
                     ) : (
@@ -210,7 +210,7 @@ export default function EmailOptInModal({ onClose, isVisible }: EmailOptInModalP
                   Welcome aboard! 🎉
                 </h3>
                 <p className="text-gray-600 text-base sm:text-lg">
-                  You're now subscribed to our newsletter. Check your email for a confirmation message.
+                  You&apos;re now subscribed to our newsletter. Check your email for a confirmation message.
                 </p>
               </div>
             )}
