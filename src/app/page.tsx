@@ -14,6 +14,10 @@ import VideoFeatureSection from "@/components/homeSections/video-feature-section
 export default function Home() {
   const router = useRouter();
 
+  const handlePrimaryClick = () => {
+    router.push('/sign-in');
+  };
+
   const handleCourseClick = (courseId: string) => {
     // Find course by ID and navigate to slug-based URL
     const course = COURSE_DETAILS.find(c => c.id === courseId);
@@ -38,7 +42,7 @@ export default function Home() {
   return (
     <ErrorBoundary fallback={<div>Error</div>}>
       <Suspense fallback={<div>Loading...</div>}>
-        <HeroSection />
+        <HeroSection onPrimaryClick={handlePrimaryClick} />
         <VideoFeatureSection />
         <PopularCoursesSection 
           onCourseClick={handleCourseClick}

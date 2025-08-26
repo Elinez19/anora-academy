@@ -7,6 +7,7 @@ import { ChevronDown, Menu, X } from 'lucide-react';
 import { HeaderProps } from '@/interfaces/header';
 import { HEADER_DEFAULTS, HEADER_NAVIGATION, MEGA_MENUS } from '@/constants/header';
 import { useRouter } from 'next/navigation';
+import UserMenu from '@/components/auth/UserMenu';
 
 export const Header: React.FC<HeaderProps> = ({
   companyName = HEADER_DEFAULTS.companyName,
@@ -94,16 +95,11 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-4">
-            {/* Get Started Button */}
-            {showGetStartedButton && (
-              <Button
-                onClick={() => router.push('/auth')}
-                className="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-lg font-medium transition-colors"
-              >
-                {getStartedButtonText}
-              </Button>
-            )}
+            {/* Auth Button */}
+            <UserMenu />
 
+            
+            
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

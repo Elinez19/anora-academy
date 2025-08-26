@@ -4,6 +4,7 @@ import { Gantari, Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import EmailOptInWrapper from "@/components/EmailOptInWrapper";
 
 
 const gantari = Gantari({
@@ -37,6 +38,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <EmailOptInWrapper />
       </body>
     </html>
   );

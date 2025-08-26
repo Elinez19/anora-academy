@@ -1,4 +1,4 @@
-export { default as AuthForm } from './auth-form';
-export { default as AuthButton } from './auth-button';
-export { default as UserProfile } from './user-profile';
-export { default as ProtectedRoute } from './protected-route';
+export { default as SignInForm } from './SignInForm';
+export { default as ForgotPasswordForm } from './ForgotPasswordForm';
+export { default as OAuthButton } from './OAuthButton';
+export { default as ProtectedRoute } from './ProtectedRoute';
