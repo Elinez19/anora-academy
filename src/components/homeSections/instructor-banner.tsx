@@ -47,7 +47,7 @@ export const InstructorBanner: React.FC<InstructorBannerProps> = ({
             </div>
 
             {/* Right Content - Image */}
-            <div className="flex justify-center lg:justify-end">
+            <div className="flex justify-center lg:justify-end -mb-36">
                  <Image src="/images/hero-bg-img.svg" alt="Instructor" width={500} height={500} />
             </div>
           </div>
