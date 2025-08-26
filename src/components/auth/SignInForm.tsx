@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { authClient } from '@/lib/auth-client';
 import { toast } from 'sonner';
 import { FcGoogle } from "react-icons/fc";
@@ -175,18 +176,28 @@ export default function SignInForm() {
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="otp">One-Time Password</Label>
-            <Input
-              id="otp"
-              name="otp"
-              type="text"
-              placeholder="Enter 6-digit OTP"
-              value={formData.otp}
-              onChange={handleChange}
-              maxLength={6}
-              className="text-center text-lg tracking-widest"
-              required
-            />
+            <Label htmlFor="otp" className="text-center block">One-Time Password</Label>
+            <div className="flex justify-center">
+              <InputOTP
+                value={formData.otp}
+                onChange={(value) => setFormData(prev => ({ ...prev, otp: value }))}
+                maxLength={6}
+                containerClassName="gap-2"
+                className="justify-center"
+              >
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                  <InputOTPSlot index={2} />
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
+                </InputOTPGroup>
+              </InputOTP>
+            </div>
+            <p className="text-xs text-midnight-500 text-center">
+              Enter the 6-digit code sent to your email
+            </p>
           </div>
 
           <Button

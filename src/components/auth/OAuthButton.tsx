@@ -1,7 +1,8 @@
 "use client";
 
 import React from 'react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 
 interface OAuthButtonProps {
   provider: 'google' | 'github';
@@ -82,7 +83,7 @@ const OAuthButton: React.FC<OAuthButtonProps> = ({
     >
       {isLoading ? (
         <div className="flex items-center justify-center">
-          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2"></div>
+          <Loader2 className="size-4 animate-spin "/>
           Connecting...
         </div>
       ) : (
