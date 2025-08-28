@@ -2,27 +2,27 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { ChevronDown, Menu, X } from 'lucide-react';
+import { ChevronDown, Loader2, Menu, X } from 'lucide-react';
 import { HeaderProps } from '@/interfaces/header';
-import { HEADER_DEFAULTS, HEADER_NAVIGATION, MEGA_MENUS } from '@/constants/header';
+import { HEADER_NAVIGATION, MEGA_MENUS } from '@/constants/header';
 import { useRouter } from 'next/navigation';
 import UserMenu from '@/components/auth/UserMenu';
+import { authClient } from '@/lib/auth-client';
+import { UserDropdown } from '../UserDropdown';
+import { Button } from '../ui/button';
 
 export const Header: React.FC<HeaderProps> = ({
-  companyName = HEADER_DEFAULTS.companyName,
   navigation = HEADER_NAVIGATION,
   megaMenus = MEGA_MENUS,
-  showGetStartedButton = true,
-  getStartedButtonText = HEADER_DEFAULTS.getStartedButtonText,
-  onGetStartedClick
+ 
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeMegaMenu, setActiveMegaMenu] = useState<string | null>(null);
   const megaMenuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  // Close mega menu when clicking outside
+const { data: session, isPending } = authClient.useSession()
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (megaMenuRef.current && !megaMenuRef.current.contains(event.target as Node)) {
@@ -93,10 +93,25 @@ export const Header: React.FC<HeaderProps> = ({
             ))}
           </nav>
 
-          {/* Right Side Actions */}
+                    {/* Right Side Actions */}
           <div className="flex items-center gap-4">
             {/* Auth Button */}
-            <UserMenu />
+            {isPending ? null: session ? (
+              <UserDropdown 
+                name={session.user.name || session.user.email?.split('@')[0] || "User"} 
+                email={session.user.email || ""} 
+                image={session.user.image || ""} 
+              />
+            ) : (
+                             <>
+               <Link href="/signin" className="bg-primary text-white px-4 py-2 rounded-md transition-colors hover:bg-primary/90">
+                   Sign In
+                 </Link>
+                 <Link href="/signin" className="bg-primary text-white px-4 py-2 rounded-md transition-colors hover:bg-primary/90">
+                   Get Started
+                 </Link>
+               </>
+            )}
 
             
             

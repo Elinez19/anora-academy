@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { User, Settings, ChevronDown, LogOut } from 'lucide-react';
+import { User, Settings, ChevronDown, Loader2 } from 'lucide-react';
 import LogoutButton from './LogoutButton';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -15,7 +15,8 @@ export default function UserMenu() {
     image?: string;
   } | null>(null);
 
-  // Debug: Log user state changes
+
+
   useEffect(() => {
     console.log('UserMenu - User state changed:', user);
   }, [user]);
@@ -24,7 +25,6 @@ export default function UserMenu() {
   useEffect(() => {
     checkAuthStatus();
     
-    // Listen for authentication changes
     const handleStorageChange = () => {
       checkAuthStatus();
     };
@@ -84,7 +84,7 @@ export default function UserMenu() {
   if (isLoading) {
     return (
       <Button variant="outline" disabled className="flex items-center gap-2">
-        <div className="w-4 h-4 border-2 border-gray-300 border-t-primary rounded-full animate-spin"></div>
+        <Loader2 className="size-4 animate-spin" />
         <span className="hidden sm:inline">Loading...</span>
       </Button>
     );
@@ -102,7 +102,7 @@ export default function UserMenu() {
 
   return (
     <div className="relative">
-             <div className="flex items-center space-x-2 p-2 rounded-lg hover:bg-midnight-50 transition-colors">
+      <div className="flex items-center space-x-2 p-2 rounded-lg hover:bg-midnight-50 transition-colors">
          <button
            onClick={() => setIsOpen(!isOpen)}
            className="flex items-center space-x-2"

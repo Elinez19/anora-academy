@@ -47,8 +47,12 @@ export const auth = betterAuth({
         emailOTP({
             async sendVerificationOTP({ email, otp, type }) {
                 try {
-                    const emailContent = generateOTPEmail(email, otp, type);
-                    const result = await sendEmail(emailContent);
+                    const htmlContent = generateOTPEmail(otp, email);
+                    const result = await sendEmail({
+                        to: email,
+                        subject: `Your OTP Code - ${type}`,
+                        html: htmlContent
+                    });
                     
                     if (!result.success) {
                         throw new Error('Failed to send email');
@@ -64,6 +68,4 @@ export const auth = betterAuth({
             disableSignUp: true, 
         }),
     ],
-    // Add debugging for OAuth flows
-    debug: process.env.NODE_ENV === 'development',
 });

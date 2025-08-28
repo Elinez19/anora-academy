@@ -1,122 +1,131 @@
-"use server";
+'use server';
 
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
-/**
- * Get the current user session on the server side
- */
-export const getCurrentSession = async () => {
-  try {
-    const session = await auth.api.getSession({
-      headers: await headers()
-    });
-    return { success: true, session };
-  } catch (error) {
-    console.error('Failed to get session:', error);
-    return { success: false, session: null, error: 'Failed to get session' };
-  }
+export const getSession = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  return session;
 };
 
-/**
- * Check if user is authenticated on the server side
- */
-export const isAuthenticated = async (): Promise<boolean> => {
-  try {
-    const session = await auth.api.getSession({
-      headers: await headers()
-    });
-    return !!session;
-  } catch (error) {
-    console.error('Failed to check authentication:', error);
-    return false;
-  }
+export const getUser = async () => {
+  const session = await getSession();
+  return session?.user || null;
 };
 
-/**
- * Get current user data on the server side
- */
-export const getCurrentUser = async () => {
-  try {
-    const session = await auth.api.getSession({
-      headers: await headers()
-    });
-    
-    if (!session?.user) {
-      return { success: false, user: null, error: 'No user found' };
-    }
-    
-    return { success: true, user: session.user };
-  } catch (error) {
-    console.error('Failed to get current user:', error);
-    return { success: false, user: null, error: 'Failed to get user data' };
-  }
+export const isAuthenticated = async () => {
+  const session = await getSession();
+  return !!session?.user;
 };
 
-/**
- * Sign out user on the server side
- */
-export const signOutUser = async () => {
-  try {
-    await auth.api.signOut({
-      headers: await headers()
-    });
-    return { success: true };
-  } catch (error) {
-    console.error('Failed to sign out:', error);
-    return { success: false, error: 'Failed to sign out' };
+export const requireAuth = async () => {
+  const session = await getSession();
+  if (!session?.user) {
+    throw new Error('Authentication required');
   }
+  return session.user;
 };
 
-/**
- * Update user profile on the server side
- */
+export const signOut = async () => {
+  await auth.api.signOut({
+    headers: await headers(),
+  });
+};
+
 export const updateUserProfile = async (data: { name?: string; email?: string }) => {
-  try {
-    const session = await auth.api.getSession({
-      headers: await headers()
-    });
-    
-    if (!session?.user) {
-      return { success: false, error: 'User not authenticated' };
-    }
-    
-    // TODO: Implement actual profile update logic
-    // This would typically involve updating the database
-    console.log('Updating profile for user:', session.user.id, 'with data:', data);
-    
-    return { success: true, message: 'Profile updated successfully' };
-  } catch (error) {
-    console.error('Failed to update profile:', error);
-    return { success: false, error: 'Failed to update profile' };
-  }
+  const user = await requireAuth();
+  
+  // Here you would typically update the user profile in your database
+  // For now, we'll just return the user data
+  return {
+    ...user,
+    ...data,
+  };
 };
 
-/**
- * Delete user account on the server side
- */
 export const deleteUserAccount = async () => {
-  try {
-    const session = await auth.api.getSession({
-      headers: await headers()
-    });
-    
-    if (!session?.user) {
-      return { success: false, error: 'User not authenticated' };
-    }
-    
-    // TODO: Implement actual account deletion logic
-    // This would typically involve deleting user data from the database
-    console.log('Deleting account for user:', session.user.id);
-    
-    // Sign out the user after account deletion
-    await auth.api.signOut({
-      headers: await headers()
-    });
-    
-    return { success: true, message: 'Account deleted successfully' };
-  } catch (error) {
-    console.error('Failed to delete account:', error);
-    return { success: false, error: 'Failed to delete account' };
-  }
+  const user = await requireAuth();
+  
+  // Here you would typically delete the user account from your database
+  // For now, we'll just sign them out
+  await signOut();
+  
+  return { success: true };
+};
+
+export const changePassword = async (currentPassword: string, newPassword: string) => {
+  const user = await requireAuth();
+  
+  // Here you would typically verify the current password and change it
+  // For now, we'll just return success
+  return { success: true };
+};
+
+export const enableTwoFactorAuth = async () => {
+  const user = await requireAuth();
+  
+  // Here you would typically enable 2FA for the user
+  // For now, we'll just return success
+  return { success: true };
+};
+
+export const disableTwoFactorAuth = async () => {
+  const user = await requireAuth();
+  
+  // Here you would typically disable 2FA for the user
+  // For now, we'll just return success
+  return { success: true };
+};
+
+export const getLoginHistory = async () => {
+  const user = await requireAuth();
+  
+  // Here you would typically fetch login history from your database
+  // For now, we'll return mock data
+  return [
+    {
+      id: '1',
+      timestamp: new Date().toISOString(),
+      ipAddress: '192.168.1.1',
+      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      location: 'New York, NY',
+      success: true,
+    },
+    {
+      id: '2',
+      timestamp: new Date(Date.now() - 86400000).toISOString(),
+      ipAddress: '192.168.1.1',
+      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      location: 'New York, NY',
+      success: true,
+    },
+  ];
+};
+
+export const revokeSession = async (sessionId: string) => {
+  const user = await requireAuth();
+  
+  // Here you would typically revoke a specific session
+  // For now, we'll just return success
+  return { success: true };
+};
+
+export const getActiveSessions = async () => {
+  const user = await requireAuth();
+  
+  // Here you would typically fetch active sessions from your database
+  // For now, we'll return mock data
+  return [
+    {
+      id: '1',
+      createdAt: new Date().toISOString(),
+      lastActive: new Date().toISOString(),
+      ipAddress: '192.168.1.1',
+      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      location: 'New York, NY',
+      isCurrent: true,
+    },
+  ];
 };

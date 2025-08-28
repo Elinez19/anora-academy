@@ -3,8 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Mail, Phone, MapPin, Send } from 'lucide-react';
 
 export default function ContactPage() {
   return (
@@ -18,7 +18,7 @@ export default function ContactPage() {
             </h1>
             <p className="text-xl text-gray-600 leading-relaxed">
               Have questions about our courses? Need help with your learning journey? 
-              We'd love to hear from you.
+              We&apos;d love to hear from you.
             </p>
           </div>
         </div>
@@ -31,7 +31,7 @@ export default function ContactPage() {
             <div>
               <h2 className="text-3xl font-bold text-gray-900 mb-4">Send us a Message</h2>
               <p className="text-gray-600">
-                Fill out the form below and we'll get back to you within 24 hours.
+                Fill out the form below and we&apos;ll get back to you within 24 hours.
               </p>
             </div>
 
@@ -92,7 +92,7 @@ export default function ContactPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 mb-2">We'll respond within 24 hours</p>
+                  <p className="text-gray-600 mb-2">We&apos;ll respond within 24 hours</p>
                   <a href="mailto:support@anora-academy.com" className="text-primary hover:underline font-medium">
                     support@anora-academy.com
                   </a>
@@ -150,8 +150,8 @@ export default function ContactPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  Simply browse our course catalog, select the course you're interested in, 
-                  and click the "Enroll Now" button.
+                    Simply browse our course catalog, select the course you&apos;re interested in, 
+                  and click the &quot;Enroll Now&quot; button.
                 </p>
               </CardContent>
             </Card>

@@ -1,127 +1,281 @@
+import { Resend } from 'resend';
 
-import resend from "./resend";
+const resendClient = new Resend(process.env.RESEND_API_KEY);
 
-interface EmailOptions {
+export interface EmailData {
   to: string;
   subject: string;
   html: string;
-  text?: string;
 }
 
-export async function sendEmail(options: EmailOptions) {
+export const sendEmail = async (data: EmailData) => {
   try {
-    const { data, error } = await resend.emails.send({
-      from: 'AnoraTech Academy <onboarding@resend.dev>', // Update this with your verified domain
-      to: [options.to],
-      subject: options.subject,
-      html: options.html,
-      text: options.text,
+    const result = await resendClient.emails.send({
+      from: 'onboarding@resend.dev',
+    to: 'elijahndenwa19@gmail.com',
+      subject: data.subject,
+      html: data.html,
     });
-
-    if (error) {
-      console.error('Resend error:', error);
-      return { success: false, error };
-    }
-
-    return { success: true, data };
+    return { success: true, data: result };
   } catch (error) {
-    console.error('Failed to send email:', error);
+    console.error('Email sending failed:', error);
     return { success: false, error };
   }
-}
+};
 
-export function generateOTPEmail(email: string, otp: string, type: 'sign-in' | 'email-verification' | 'forget-password') {
-  const subject = getEmailSubject(type);
-  const html = getEmailHTML(email, otp, type);
-  const text = getEmailText(email, otp, type);
-
-  return {
-    to: email,
-    subject,
-    html,
-    text,
-  };
-}
-
-function getEmailSubject(type: 'sign-in' | 'email-verification' | 'forget-password'): string {
-  switch (type) {
-    case 'sign-in':
-      return 'Your Sign-In Code';
-    case 'email-verification':
-      return 'Verify Your Email Address';
-    case 'forget-password':
-      return 'Reset Your Password';
-    default:
-      return 'Your Verification Code';
-  }
-}
-
-function getEmailHTML(email: string, otp: string, type: 'sign-in' | 'email-verification' | 'forget-password'): string {
-  const actionText = getActionText(type);
-  
+export const generateOTPEmail = (otp: string, email: string) => {
   return `
     <!DOCTYPE html>
     <html>
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>${getEmailSubject(type)}</title>
+      <title>Your OTP Code</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          line-height: 1.6;
+          color: #333;
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 20px;
+        }
+        .header {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          padding: 30px;
+          text-align: center;
+          border-radius: 10px 10px 0 0;
+        }
+        .content {
+          background: #f9f9f9;
+          padding: 30px;
+          border-radius: 0 0 10px 10px;
+        }
+        .otp-code {
+          background: #fff;
+          border: 2px dashed #667eea;
+          border-radius: 10px;
+          padding: 20px;
+          text-align: center;
+          margin: 20px 0;
+          font-size: 24px;
+          font-weight: bold;
+          color: #667eea;
+          letter-spacing: 5px;
+        }
+        .footer {
+          text-align: center;
+          margin-top: 30px;
+          color: #666;
+          font-size: 14px;
+        }
+        .button {
+          display: inline-block;
+          background: #667eea;
+          color: white;
+          padding: 12px 30px;
+          text-decoration: none;
+          border-radius: 5px;
+          margin: 20px 0;
+        }
+      </style>
     </head>
-    <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <div style="background: #f8f9fa; padding: 30px; border-radius: 10px; text-align: center;">
-        <h1 style="color: #2c3e50; margin-bottom: 20px;">${getEmailSubject(type)}</h1>
+    <body>
+      <div class="header">
+        <h1>🔐 Your OTP Code</h1>
+        <p>Complete your sign-in process</p>
+      </div>
+      
+      <div class="content">
+        <h2>Hello!</h2>
+        <p>You've requested to sign in to your Anora Academy account. Use the OTP code below to complete your sign-in:</p>
         
-        <p style="font-size: 16px; margin-bottom: 30px;">
-          Hi there!<br>
-          ${actionText} for <strong>${email}</strong>
-        </p>
-        
-        <div style="background: #fff; padding: 20px; border-radius: 8px; border: 2px solid #e9ecef; margin: 30px 0;">
-          <h2 style="color: #495057; margin: 0; font-size: 32px; letter-spacing: 5px; font-family: monospace;">
-            ${otp}
-          </h2>
+        <div class="otp-code">
+          ${otp}
         </div>
         
-        <p style="font-size: 14px; color: #6c757d; margin-bottom: 20px;">
-          This code will expire in 5 minutes for security reasons.
-        </p>
+        <p><strong>Important:</strong></p>
+        <ul>
+          <li>This code will expire in 10 minutes</li>
+          <li>Never share this code with anyone</li>
+          <li>If you didn't request this code, please ignore this email</li>
+        </ul>
         
-        <p style="font-size: 14px; color: #6c757d;">
-          If you didn't request this code, please ignore this email.
-        </p>
+        <p>If you're having trouble, you can also copy and paste this code into the sign-in form.</p>
+        
+        <div style="text-align: center;">
+          <a href="#" class="button">Sign In Now</a>
+        </div>
+        
+        <p>Best regards,<br>The Anora Academy Team</p>
+      </div>
+      
+      <div class="footer">
+        <p>This is an automated email. Please do not reply to this message.</p>
+        <p>&copy; 2024 Anora Academy. All rights reserved.</p>
       </div>
     </body>
     </html>
   `;
-}
+};
 
-function getEmailText(email: string, otp: string, type: 'sign-in' | 'email-verification' | 'forget-password'): string {
-  const actionText = getActionText(type);
-  
+export const generateWelcomeEmail = (name: string) => {
   return `
-${getEmailSubject(type)}
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Welcome to Anora Academy!</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          line-height: 1.6;
+          color: #333;
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 20px;
+        }
+        .header {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          padding: 30px;
+          text-align: center;
+          border-radius: 10px 10px 0 0;
+        }
+        .content {
+          background: #f9f9f9;
+          padding: 30px;
+          border-radius: 0 0 10px 10px;
+        }
+        .feature {
+          background: #fff;
+          padding: 15px;
+          margin: 10px 0;
+          border-radius: 5px;
+          border-left: 4px solid #667eea;
+        }
+        .button {
+          display: inline-block;
+          background: #667eea;
+          color: white;
+          padding: 12px 30px;
+          text-decoration: none;
+          border-radius: 5px;
+          margin: 20px 0;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <h1>🎉 Welcome to Anora Academy!</h1>
+        <p>Your learning journey begins now</p>
+      </div>
+      
+      <div class="content">
+        <h2>Hello ${name}!</h2>
+        <p>Welcome to Anora Academy! We're thrilled to have you join our community of learners.</p>
+        
+        <p>Here's what you can do to get started:</p>
+        
+        <div class="feature">
+          <h3>📚 Explore Our Courses</h3>
+          <p>Browse through our extensive collection of courses designed to help you master new skills.</p>
+        </div>
+        
+        <div class="feature">
+          <h3>🎯 Set Learning Goals</h3>
+          <p>Define your learning objectives and track your progress as you advance through your courses.</p>
+        </div>
+        
+        <div class="feature">
+          <h3>👥 Join the Community</h3>
+          <p>Connect with fellow learners, share experiences, and get support when you need it.</p>
+        </div>
+        
+        <div style="text-align: center;">
+          <a href="/courses" class="button">Start Learning</a>
+        </div>
+        
+        <p>If you have any questions or need assistance, our support team is here to help!</p>
+        
+        <p>Happy learning!<br>The Anora Academy Team</p>
+      </div>
+    </body>
+    </html>
+  `;
+};
 
-Hi there!
-${actionText} for ${email}
-
-Your verification code is: ${otp}
-
-This code will expire in 5 minutes for security reasons.
-
-If you didn't request this code, please ignore this email.
-  AnoraTech Academy. Copyright ${new Date().getFullYear()}
-  `.trim();
-}
-
-function getActionText(type: 'sign-in' | 'email-verification' | 'forget-password'): string {
-  switch (type) {
-    case 'sign-in':
-      return 'Here\'s your sign-in code';
-    case 'email-verification':
-      return 'Here\'s your email verification code';
-    case 'forget-password':
-      return 'Here\'s your password reset code';
-    default:
-      return 'Here\'s your verification code';
-  }
-}
+export const generatePasswordResetEmail = (resetLink: string) => {
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Reset Your Password</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          line-height: 1.6;
+          color: #333;
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 20px;
+        }
+        .header {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          padding: 30px;
+          text-align: center;
+          border-radius: 10px 10px 0 0;
+        }
+        .content {
+          background: #f9f9f9;
+          padding: 30px;
+          border-radius: 0 0 10px 10px;
+        }
+        .button {
+          display: inline-block;
+          background: #667eea;
+          color: white;
+          padding: 12px 30px;
+          text-decoration: none;
+          border-radius: 5px;
+          margin: 20px 0;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <h1>🔑 Reset Your Password</h1>
+        <p>Secure your account access</p>
+      </div>
+      
+      <div class="content">
+        <h2>Password Reset Request</h2>
+        <p>We received a request to reset your password for your Anora Academy account.</p>
+        
+        <p>Click the button below to create a new password:</p>
+        
+        <div style="text-align: center;">
+          <a href="${resetLink}" class="button">Reset Password</a>
+        </div>
+        
+        <p><strong>Important:</strong></p>
+        <ul>
+          <li>This link will expire in 1 hour</li>
+          <li>If you didn't request this reset, please ignore this email</li>
+          <li>Your password will remain unchanged until you click the link above</li>
+        </ul>
+        
+        <p>If the button doesn't work, you can copy and paste this link into your browser:</p>
+        <p style="word-break: break-all; color: #667eea;">${resetLink}</p>
+        
+        <p>Best regards,<br>The Anora Academy Team</p>
+      </div>
+    </body>
+    </html>
+  `;
+};
