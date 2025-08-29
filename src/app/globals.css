@@ -236,3 +236,12 @@ body::-webkit-scrollbar {
 .scrollable::-webkit-scrollbar {
   display: none; /* WebKit browsers */
 }
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

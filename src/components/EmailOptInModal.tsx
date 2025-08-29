@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { X, Mail, CheckCircle, ArrowRight, Check, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,50 +15,21 @@ export default function EmailOptInModal({ onClose, isVisible }: EmailOptInModalP
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [showModal, setShowModal] = useState(false);
 
-  useEffect(() => {
-    if (isVisible) {
-      // Show modal after 3 seconds on page visit
-      const timer = setTimeout(() => {
-        setShowModal(true);
-      }, 3000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [isVisible]);
-
-  // Exit intent detection
-  useEffect(() => {
-    const handleMouseLeave = (e: MouseEvent) => {
-      if (e.clientY <= 0 && !showModal) {
-        setShowModal(true);
-      }
-    };
-
-    const handleBeforeUnload = () => {
-      if (!showModal) {
-        setShowModal(true);
-      }
-    };
-
-    // Keyboard escape key handler
+  // Keyboard escape key handler
+  React.useEffect(() => {
     const handleEscapeKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && showModal) {
-        handleClose();
+      if (e.key === 'Escape' && isVisible) {
+        onClose();
       }
     };
 
-    document.addEventListener('mouseleave', handleMouseLeave);
-    window.addEventListener('beforeunload', handleBeforeUnload);
     document.addEventListener('keydown', handleEscapeKey);
 
     return () => {
-      document.removeEventListener('mouseleave', handleMouseLeave);
-      window.removeEventListener('beforeunload', handleBeforeUnload);
       document.removeEventListener('keydown', handleEscapeKey);
     };
-  }, [showModal]);
+  }, [isVisible, onClose]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,7 +69,6 @@ export default function EmailOptInModal({ onClose, isVisible }: EmailOptInModalP
   };
 
   const handleClose = () => {
-    setShowModal(false);
     onClose();
   };
 
@@ -109,7 +79,7 @@ export default function EmailOptInModal({ onClose, isVisible }: EmailOptInModalP
     }
   };
 
-  if (!showModal) return null;
+  if (!isVisible) return null;
 
   return (
     <div 

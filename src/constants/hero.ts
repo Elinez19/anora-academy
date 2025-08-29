@@ -30,27 +30,27 @@ export const DEFAULT_STATS = [
     value: '10,000+',
     label: 'Active Students',
     description: 'Learning across Nigeria and beyond',
-    color: 'bg-blue-600'
+    color: 'bg-primary'
   },
   {
     iconName: 'GraduationCap',
     value: '50+',
     label: 'Expert Instructors',
     description: 'Industry professionals and educators',
-    color: 'bg-green-600'
+    color: 'bg-teal-600'
   },
   {
     iconName: 'CheckCircle',
     value: '100+',
     label: 'Courses Available',
     description: 'Comprehensive tech curriculum',
-    color: 'bg-purple-600'
+    color: 'bg-teal-900'
   },
   {
     iconName: 'CheckCircle',
     value: '95%',
     label: 'Job Placement Rate',
     description: 'Graduates employed within 6 months',
-    color: 'bg-orange-600'
+    color: 'bg-primary'
   }
 ];

@@ -27,7 +27,7 @@ export default function SignInForm() {
   const handleGithubSignIn = async () => {
     setIsGithubPending(true);
     try {
-      const callbackURL = searchParams.get('callbackUrl') || '/dashboard';
+      const callbackURL = searchParams.get('callbackUrl') || '/admin';
       
       await authClient.signIn.social({
         provider: "github",
@@ -53,7 +53,7 @@ export default function SignInForm() {
   const handleGoogleSignIn = async () => {
     setIsGooglePending(true);
     try {
-      const callbackURL = searchParams.get('callbackUrl') || '/dashboard';
+      const callbackURL = searchParams.get('callbackUrl') || '/admin';
       
       await authClient.signIn.social({
         provider: "google",
@@ -121,7 +121,7 @@ export default function SignInForm() {
         fetchOptions: {
           onSuccess: () => {
             toast.success('Signed in successfully!');
-            window.location.href = '/dashboard';
+            window.location.href = '/admin';
           },
           onError: (error: unknown) => {
             const errorMessage = error instanceof Error ? error.message : 'Invalid OTP';

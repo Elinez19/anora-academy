@@ -113,7 +113,7 @@ export const generateOTPEmail = (otp: string, email: string) => {
       
       <div class="footer">
         <p>This is an automated email. Please do not reply to this message.</p>
-        <p>&copy; 2024 Anora Academy. All rights reserved.</p>
+        <p>&copy; ${new Date().getFullYear()} Anora Academy. All rights reserved.</p>
       </div>
     </body>
     </html>

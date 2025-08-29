@@ -2,14 +2,12 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { ChevronDown, Loader2, Menu, X } from 'lucide-react';
+import { ChevronDown, Menu, X } from 'lucide-react';
 import { HeaderProps } from '@/interfaces/header';
 import { HEADER_NAVIGATION, MEGA_MENUS } from '@/constants/header';
-import { useRouter } from 'next/navigation';
-import UserMenu from '@/components/auth/UserMenu';
+
 import { authClient } from '@/lib/auth-client';
 import { UserDropdown } from '../UserDropdown';
-import { Button } from '../ui/button';
 
 export const Header: React.FC<HeaderProps> = ({
   navigation = HEADER_NAVIGATION,
@@ -19,7 +17,6 @@ export const Header: React.FC<HeaderProps> = ({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeMegaMenu, setActiveMegaMenu] = useState<string | null>(null);
   const megaMenuRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
 
 const { data: session, isPending } = authClient.useSession()
 
