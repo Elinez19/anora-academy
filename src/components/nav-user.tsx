@@ -1,12 +1,13 @@
 "use client"
 
 import {
-  IconCreditCard,
   IconDotsVertical,
   IconLogout,
-  IconNotification,
-  IconUserCircle,
+  IconHome,
+  IconDashboard,
+  IconBook,
 } from "@tabler/icons-react"
+import { useEffect, useState } from "react"
 
 import {
   Avatar,
@@ -28,17 +29,82 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { Skeleton } from "./ui/skeleton"
+import Link from "next/link"
+import { useSignOut } from "@/hooks/use-signout"
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    name: string
-    email: string
-    avatar: string
+export function NavUser() {
+  const { isMobile, state } = useSidebar()
+  const isCollapsed = state === "collapsed"
+  const [user, setUser] = useState<{
+    id: string;
+    email?: string;
+    name?: string;
+    image?: string;
+  } | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  const signOut = useSignOut()
+
+  useEffect(() => {
+    checkAuthStatus()
+    
+    const handleStorageChange = () => {
+      checkAuthStatus()
+    }
+    
+    const handleLogout = () => {
+      setUser(null)
+    }
+    
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        checkAuthStatus()
+      }
+    }
+    
+    const intervalId = setInterval(checkAuthStatus, 30000)
+    
+    window.addEventListener('storage', handleStorageChange)
+    window.addEventListener('auth:logout', handleLogout)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    
+    return () => {
+      clearInterval(intervalId)
+      window.removeEventListener('storage', handleStorageChange)
+      window.removeEventListener('auth:logout', handleLogout)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [])
+
+  const checkAuthStatus = async () => {
+    try {
+      const response = await fetch('/api/auth/session')
+      if (response.ok) {
+        const data = await response.json()
+        if (data.session?.user) {
+          setUser(data.session.user)
+        } else {
+          setUser(null)
+        }
+      } else {
+        setUser(null)
+      }
+    } catch (error) {
+      console.error('Failed to check auth status:', error)
+      setUser(null)
+    } finally {
+      setIsLoading(false)
+    }
   }
-}) {
-  const { isMobile } = useSidebar()
+
+  if (isLoading) {
+    return <Skeleton className="h-12 w-full" />
+  }
+
+  if (!user) {
+    return null
+  }
 
   return (
     <SidebarMenu>
@@ -50,16 +116,20 @@ export function NavUser({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg grayscale">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <AvatarImage src={user.image ?? `https://avatar.vercel.sh/${user.name}`} alt={user.name || ""} />
+                <AvatarFallback className="rounded-lg">{user.name && user.name.length > 0 ? user.name.charAt(0).toUpperCase() : user.email?.charAt(0).toUpperCase()}</AvatarFallback>
               </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
-                <span className="text-muted-foreground truncate text-xs">
-                  {user.email}
-                </span>
-              </div>
-              <IconDotsVertical className="ml-auto size-4" />
+              {!isCollapsed && (
+                <>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-medium text-amber-800">{user.name && user.name.length > 0 ? user.name : user.email?.split("@")[0]}</span>
+                    <span className="text-muted-foreground truncate text-xs">
+                      {user.email}
+                    </span>
+                  </div>
+                  <IconDotsVertical className="ml-auto size-4 text-amber-800" />
+                </>
+              )}
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -71,11 +141,11 @@ export function NavUser({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarImage src={user.image ?? `https://avatar.vercel.sh/${user.name}`} alt={user.name || ""} />
+                  <AvatarFallback className="rounded-lg">{user.name?.charAt(0).toUpperCase()}</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
+                  <span className="truncate font-medium text-amber-800">{user.name && user.name.length > 0 ? user.name : user.email?.split("@")[0]}</span>
                   <span className="text-muted-foreground truncate text-xs">
                     {user.email}
                   </span>
@@ -84,21 +154,27 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <IconUserCircle />
-                Account
+              <DropdownMenuItem asChild>
+                <Link href="/">
+                  <IconHome />
+                  HomePage
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <IconCreditCard />
-                Billing
+                <DropdownMenuItem asChild>
+                <Link href="/admin">
+                  <IconDashboard />
+                 Dashboard  
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <IconNotification />
-                Notifications
+              <DropdownMenuItem asChild>
+                <Link href="/admin/courses">
+                  <IconBook />
+                  Courses
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={signOut}>
               <IconLogout />
               Log out
             </DropdownMenuItem>

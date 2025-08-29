@@ -9,6 +9,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar"
 
 export function NavSecondary({
@@ -21,6 +22,9 @@ export function NavSecondary({
     icon: Icon
   }[]
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
+  const { state } = useSidebar()
+  const isCollapsed = state === "collapsed"
+  
   return (
     <SidebarGroup {...props}>
       <SidebarGroupContent>
@@ -30,7 +34,7 @@ export function NavSecondary({
               <SidebarMenuButton asChild>
                 <a href={item.url}>
                   <item.icon />
-                  <span>{item.title}</span>
+                  {!isCollapsed && <span>{item.title}</span>}
                 </a>
               </SidebarMenuButton>
             </SidebarMenuItem>

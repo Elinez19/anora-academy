@@ -8,6 +8,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar"
 import Link from "next/link"
 export function NavMain({
@@ -19,6 +20,9 @@ export function NavMain({
     icon?: Icon
   }[]
 }) {
+  const { state } = useSidebar()
+  const isCollapsed = state === "collapsed"
+  
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
@@ -30,7 +34,7 @@ export function NavMain({
             >
               <Link href="/admin/courses/create">
               <IconCirclePlusFilled />
-              <span>Quick Create</span>
+              {!isCollapsed && <span>Quick Create</span>}
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -41,7 +45,7 @@ export function NavMain({
               <SidebarMenuButton tooltip={item.title} asChild>
                    <Link href={item.url}>
                    {item.icon && <item.icon />}
-                   <span>{item.title}</span>
+                   {!isCollapsed && <span>{item.title}</span>}
                    </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
