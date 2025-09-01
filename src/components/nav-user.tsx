@@ -117,7 +117,9 @@ export function NavUser() {
             >
               <Avatar className="h-8 w-8 rounded-lg grayscale">
                 <AvatarImage src={user.image ?? `https://avatar.vercel.sh/${user.name}`} alt={user.name || ""} />
-                <AvatarFallback className="rounded-lg">{user.name && user.name.length > 0 ? user.name.charAt(0).toUpperCase() : user.email?.charAt(0).toUpperCase()}</AvatarFallback>
+                <AvatarFallback className="rounded-lg">
+                  {user.name && user.name.length > 0 ? user.name.charAt(0).toUpperCase() : user.email?.charAt(0).toUpperCase()}
+                  </AvatarFallback>
               </Avatar>
               {!isCollapsed && (
                 <>
