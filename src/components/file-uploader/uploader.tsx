@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react'
 import {useDropzone, FileRejection} from 'react-dropzone'
 import { Card, CardContent } from '../ui/card'
 import { cn } from '@/lib/utils'
-import { RenderEmptyState } from './RenderState'
+import { RenderEmptyState, RenderErrorState } from './RenderState'
 import { toast } from 'sonner'
 import { v4 as uuidv4 } from 'uuid';
 
@@ -49,6 +49,30 @@ export function FileUploader() {
         }
       }
     }
+
+function renderContent() {
+  if(fileState.uploaded) {
+    return (
+      <h1>uploading...</h1>
+    )
+  }
+  if(fileState.error) {
+    return(
+      <RenderErrorState />
+    )
+  }
+
+if(fileState.objectURL){
+  return (
+    <h1>uploded file</h1>
+  )
+}
+
+  return (
+    <RenderEmptyState isDragActive={isDragActive} />
+  )
+}
+
     const onDrop = useCallback((acceptedFiles: File[]) => {
         if(acceptedFiles.length > 0) { 
             const file = acceptedFiles[0]
@@ -63,6 +87,7 @@ export function FileUploader() {
                 fileType: "image",
                 objectURL: URL.createObjectURL(file)
             })
+            uploadFile(file)
         }
       }, [])    
       const {getRootProps, getInputProps, isDragActive} = useDropzone({
@@ -78,7 +103,7 @@ export function FileUploader() {
 
 
 
-function uploadFile(file: File) {
+async function uploadFile(file: File) {
     setFileState((prev) => (
         {
             ...prev, 
@@ -89,9 +114,81 @@ function uploadFile(file: File) {
     )
     )
     try {
-       
-    } catch (error) {
-        console.error(error)
+       const presignedResponse = await fetch("/api/s3/upload",{
+        method: "POST",
+        headers:{ "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fileName: file.name,
+          contentType: file.type,
+          size: file.size,
+          isImage: file.type.startsWith("image/")
+        })
+       })
+       if(!presignedResponse.ok) {
+        toast.error("Failed to generate presigned url")
+        setFileState((prev) => (
+            {
+                ...prev,
+                error: true,
+                uploaded: false,
+                progress: 0,
+            }
+        ))
+        return
+       }
+       const { presignedUrl, key } = await presignedResponse.json()
+       await new Promise<void>((resolve, reject) => {
+      const xhr = new XMLHttpRequest()
+        xhr.upload.onprogress = (event) =>{
+          if(event.lengthComputable) {
+            const percentageCompleted = Math.round((event.loaded / event.total) * 100)
+            setFileState((prev) => (
+              {
+                ...prev,                
+                progress: percentageCompleted,
+              }
+            ))
+          }
+        }
+        xhr.onload = () => {
+          if(xhr.status === 200 || xhr.status === 201) {
+            setFileState((prev) => (
+              {
+                ...prev,
+                uploaded: false,
+                progress: 100,
+                key: key,
+
+              }
+            ))
+            toast.success("File uploaded successfully")
+            resolve()
+          }
+          else{
+            reject(new Error("Failed to upload file"))
+          }
+        }
+        
+        xhr.onerror = () => {
+          reject(new Error("Failed to upload file"))
+        }
+        xhr.open("PUT", presignedUrl)
+        xhr.setRequestHeader("Content-Type", file.type)
+        xhr.send(file)
+       })
+        
+    }
+    catch {
+      toast.error("Something went wrong")
+      setFileState((prev) => (
+        {
+          ...prev,
+          error: true,
+          uploaded: false,
+          progress: 0,
+        }
+      ))
+     
     }
 }
 
@@ -100,8 +197,7 @@ function uploadFile(file: File) {
         <Card {...getRootProps()} className={cn( "relative border-2 border-dashed transition-colors duration-300 ease-in-out w-full h-64", isDragActive ? "border-primary bg-primary/10 border-solid" : "border-border hover:border-primary")}>
        <CardContent className='flex items-center justify-center w-full p-4'>
         <input {...getInputProps()} />
-         <RenderEmptyState isDragActive={isDragActive} />
-         {/* <RenderErrorState /> */}
+        {renderContent()}
        </CardContent>
       </Card>
     )
