@@ -4,7 +4,7 @@ import { NextResponse } from "next/server"
 import {  z} from "zod"
 import { v4 as uuidv4 } from "uuid"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
-import { s3Client } from "@/lib/s3Client"
+import { s3Client } from "@/lib/S3Client"
 export const fileUploadSchema = z.object({
     fileName: z.string().min(1, {message: "File name is required"}),
    contentType: z.string().min(1, {message: "Content type is required"}),
