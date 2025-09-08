@@ -20,7 +20,7 @@ export const env = createEnv({
   },
   client: {
     NEXT_PUBLIC_GOOGLE_OAUTH_ENABLED: z.string().optional().default("true"),
-    NEXT_PUBLIC_S3_NAME_BUCKET_IMAGES: z.string().optional().default("images"),
+    NEXT_PUBLIC_S3_NAME_BUCKET_IMAGES: z.string().optional().default("anoratech-lms"),
   },
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,

@@ -22,13 +22,12 @@ export async function POST(request:Request) {
     const key = `${uuidv4()}-${fileName}`
 
     const command = new PutObjectCommand({
-        Bucket: env.NEXT_PUBLIC_S3_NAME_BUCKET_IMAGES,
+        Bucket: env.AWS_BUCKET_NAME || env.NEXT_PUBLIC_S3_NAME_BUCKET_IMAGES,
         ContentType: contentType,
-        ContentLength: size,
         Key: key,
     })
     const presignedUrl = await getSignedUrl(s3Client, command, {
-        expiresIn: 360,
+        expiresIn: 3600, // 1 hour
     })
     const response = {
       presignedUrl,
