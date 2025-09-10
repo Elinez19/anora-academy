@@ -1,4 +1,5 @@
 "use client";
+import { useTransition } from "react";
 import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
@@ -14,7 +15,8 @@ import {
   CourseLevel,
   CourseStatus,
 } from "@/lib/zodSchema";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -40,8 +42,13 @@ import { Button } from "@/components/ui/button";
 import slugify from "slugify";
 import { RichTextEditor } from "@/components/rich-text-editor/Editor";
 import { FileUploader } from "@/components/file-uploader/uploader";
+import { toast } from "sonner";
+import { tryCatch } from "@/hooks/try-catch";
+import { createCourse } from "./actions";
 
 export default function CreateCoursePage() {
+  const [pending, startTransition] = useTransition();
+  const router = useRouter();
   const form = useForm<CourseSchemaType>({
     resolver: zodResolver(courseSchema),
     defaultValues: {
@@ -60,8 +67,20 @@ export default function CreateCoursePage() {
   const titleValue = useWatch({ control: form.control, name: "title" });
 
   function onSubmit(values: CourseSchemaType) {
-    console.log(values);
-    // TODO: Implement API call to create course
+    startTransition(async () => {
+      const { data: result, error } = await tryCatch(createCourse(values));
+      if (error) {
+        toast.error("Unexpected error occurred. Please try again.");
+        return;
+      }
+      if (result.status === "success") {
+        toast.success(result.message);
+        form.reset();
+        router.push("/admin/courses");
+      } else if (result.status === "error") {
+        toast.error(result.message);
+      }
+    });
   }
 
   return (
@@ -338,7 +357,16 @@ export default function CreateCoursePage() {
                     Cancel
                   </Button>
                 </Link>
-                <Button type="submit">Create Course</Button>
+                <Button type="submit" disabled={pending}>
+                  {pending ? (
+                    <>
+                      <Loader2 className="size-4 animate-spin" />
+                      Creating...
+                    </>
+                  ) : (
+                    "Create Course"
+                  )}
+                </Button>
               </div>
             </form>
           </Form>

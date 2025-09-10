@@ -2,8 +2,34 @@ import { NextResponse } from "next/server";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { env } from "@/lib/env";
 import { s3Client } from "@/lib/S3Client";
+import arcjet, { detectBot, fixedWindow } from "@/lib/arcjet";
+import { requireAdmin } from "@/app/data/admin/require-admin";
+
+const aj = arcjet
+  .withRule(
+    detectBot({
+      mode: "LIVE",
+      allow: [],
+    })
+  )
+  .withRule(
+    fixedWindow({
+      mode: "LIVE",
+      window: "1m",
+      max: 5,
+    })
+  );
 
 export async function DELETE(request: Request) {
+  const session = await requireAdmin();
+
+  const decision = await aj.protect(request, {
+    fingerprint: session?.id as string,
+  });
+  if (decision.isDenied()) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   try {
     const body = await request.json();
     const key = body.key;
